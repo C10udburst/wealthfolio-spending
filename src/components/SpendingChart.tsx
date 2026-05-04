@@ -29,15 +29,16 @@ export default function SpendingChart({ dailyData, monthlyData, currency = 'USD'
       cumulative += d.amount;
       return {
         ...d,
-        cumulative
+        cumulative,
+        displayAmount: d.amount > 0 ? d.amount : null
       };
     });
   }, [rawData]);
 
-  const useLineGraph = data.length > 200;
+  const useLineGraph = data.length > 150;
 
   const chartConfig = {
-    amount: {
+    displayAmount: {
       label: view === 'daily' ? 'Daily ' : 'Monthly ',
       color: "hsl(25, 95%, 55%)", // Warm orange
     },
@@ -101,16 +102,16 @@ export default function SpendingChart({ dailyData, monthlyData, currency = 'USD'
                   <Line
                     yAxisId="left"
                     type="monotone"
-                    dataKey="amount"
-                    stroke="var(--color-amount)"
-                    strokeWidth={2}
-                    dot={false}
+                    dataKey="displayAmount"
+                    stroke="none"
+                    dot={{ r: 3, fill: 'var(--color-displayAmount)', strokeWidth: 0 }}
+                    activeDot={{ r: 5 }}
                   />
                 ) : (
                   <Bar 
                     yAxisId="left"
-                    dataKey="amount" 
-                    fill="var(--color-amount)" 
+                    dataKey="displayAmount" 
+                    fill="var(--color-displayAmount)" 
                     radius={[4, 4, 0, 0]} 
                     barSize={view === 'daily' ? undefined : 40}
                   />
